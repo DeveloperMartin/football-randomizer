@@ -1,6 +1,6 @@
 <p-card>
   <form [formGroup]="newPlayerForm" (ngSubmit)="onSubmit()">
-    <span class="p-float-label m-1">
+    <span class="p-float-label m-5">
       <input
         class="w-full"
         id="float-input"
@@ -10,147 +10,103 @@
       />
       <label for="float-input">Nombre</label>
     </span>
-    <span class="p-float-label m-1">
+    <span class="p-float-label m-5">
       <input
         class="w-full"
         id="float-input"
         type="text"
         pInputText
-        formControlName="label"
+        formControlName="data"
       />
       <label for="float-input">Descripcion</label>
     </span>
-    <p-card [formGroup]="paceForm">
-      <ng-template class="justify-content-center" pTemplate="header">
-        <h1 class="m-5">Ritmo</h1>
-        <p-knob
-          class="flex align-items-center justify-content-center"
-          [readonly]="true"
-          [formControl]="paceAverageControl"
-          [(ngModel)]="pace.paceAverage"
-          [size]="200"
-        ></p-knob>
-      </ng-template>
-      <div class="grid">
-        <div class="col-6">
-          <h5>Aceleracion</h5>
+    <p-card>
+      <div class="grid flex justify-content-start flex-wrap">
+        <div class="col">
+          <h4 class="m-5">Ritmo</h4>
+          <p-knob [formControl]="paceForm" [(ngModel)]="pace"></p-knob>
+        </div>
+        <div class="col">
+          <h4 class="m-5">Tiro</h4>
+          <p-knob [formControl]="shootingForm" [(ngModel)]="shooting"></p-knob>
+        </div>
+        <div class="col">
+          <h4 class="m-5">Pase</h4>
+          <p-knob [formControl]="passingForm" [(ngModel)]="passing"></p-knob>
+        </div>
+        <div class="col">
+          <h4 class="m-5">Regate</h4>
           <p-knob
-            [formControl]="accelerationControl"
-            [(ngModel)]="pace.acceleration"
+            [formControl]="dribblingForm"
+            [(ngModel)]="dribbling"
           ></p-knob>
         </div>
-        <div class="col-6">
-          <h5>Velocidad maxima</h5>
+        <div class="col">
+          <h4 class="m-5">Defensa</h4>
           <p-knob
-            [formControl]="sprintSpeedControl"
-            [(ngModel)]="pace.sprintSpeed"
+            [formControl]="defendingForm"
+            [(ngModel)]="defending"
           ></p-knob>
         </div>
-      </div>
-    </p-card>
-    <p-card [formGroup]="shootingForm">
-      <ng-template class="justify-content-center" pTemplate="header">
-        <h1 class="m-5">Tiro</h1>
-        <p-knob
-          class="flex align-items-center justify-content-center"
-          [readonly]="true"
-          [formControl]="shootingAverageControl"
-          [(ngModel)]="shooting.shootingAverage"
-          [size]="200"
-        ></p-knob>
-      </ng-template>
-      <div class="grid">
-        <div class="col-6">
-          <h5>Posicion</h5>
-          <p-knob
-            [formControl]="positioningControl"
-            [(ngModel)]="shooting.positioning"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Definicion</h5>
-          <p-knob
-            [formControl]="finishingControl"
-            [(ngModel)]="shooting.finishing"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Poder de disparo</h5>
-          <p-knob
-            [formControl]="shotPowerControl"
-            [(ngModel)]="shooting.shotPower"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Tiros largos</h5>
-          <p-knob
-            [formControl]="longShotsControl"
-            [(ngModel)]="shooting.longShots"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Volea</h5>
-          <p-knob
-            [formControl]="volleysControl"
-            [(ngModel)]="shooting.volleys"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Penales</h5>
-          <p-knob
-            [formControl]="penaltiesControl"
-            [(ngModel)]="shooting.penalties"
-          ></p-knob>
-        </div>
-        <div class="col-6">
-          <h5>Precision con la cabeza</h5>
-          <p-knob
-            [formControl]="headingAccuracyControl"
-            [(ngModel)]="shooting.headingAccuracy"
-          ></p-knob>
+        <div class="col">
+          <h4 class="m-5">Fisico</h4>
+          <p-knob [formControl]="physicalForm" [(ngModel)]="physical"></p-knob>
         </div>
       </div>
     </p-card>
+    <button
+      pButton
+      pRipple
+      type="submit"
+      label="Agregar jugador a la lista"
+      class="p-button-raised p-button-success w-full"
+    ></button>
   </form>
-  <pre>
-    {{ newPlayerForm.value | json }}
-  </pre>
 </p-card>
 
-<p-tree
-  class="m-1"
-  [value]="playerPool"
-  [draggableNodes]="true"
-  [droppableNodes]="true"
-  draggableScope="self"
-  droppableScope="self"
-></p-tree>
+<p-card header="Lista de jugadores" class="p-1">
+  <p-tree
+    class="m-1"
+    [value]="playerPool"
+    [draggableNodes]="true"
+    [droppableNodes]="true"
+    draggableScope="self"
+    droppableScope="self"
+  ></p-tree>
+</p-card>
 <div class="grid">
   <div class="col-4">
-    <p-tree
-      [value]="firstTeam"
-      [draggableNodes]="true"
-      [droppableNodes]="true"
-      draggableScope="self"
-      droppableScope="self"
-    ></p-tree>
+    <p-card [header]="'Equipo 1 GBL:' + (firstTeam ? firstTeamAverage : 0)">
+      <p-tree
+        [value]="firstTeam"
+        [draggableNodes]="true"
+        [droppableNodes]="true"
+        draggableScope="self"
+        droppableScope="self"
+      ></p-tree>
+    </p-card>
   </div>
   <div class="col-4">
     <button
       pButton
       pRipple
+      (click)="balanceTeams()"
       type="button"
       label="Armar equipos"
       class="p-button-raised p-button-success w-full"
     ></button>
   </div>
   <div class="col-4">
-    <p-tree
-      [value]="secondTeam"
-      [draggableNodes]="true"
-      [droppableNodes]="true"
-      draggableScope="self"
-      droppableScope="self"
-    ></p-tree>
+    <p-card
+      [header]="'Equipo 1 GBL:' + (secondTeamAverage ? secondTeamAverage : 0)"
+    >
+      <p-tree
+        [value]="secondTeam"
+        [draggableNodes]="true"
+        [droppableNodes]="true"
+        draggableScope="self"
+        droppableScope="self"
+      ></p-tree>
+    </p-card>
   </div>
 </div>

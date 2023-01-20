@@ -1,55 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validator } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validator, Validators } from '@angular/forms';
 import { MessageService, PrimeNGConfig, TreeDragDropService, TreeNode } from 'primeng/api';
 
-type FormModel = {
-  label: number,
-      data: number,
-      pace: {
-        paceAverage: number,
-        acceleration: number,
-        sprintSpeed: number,
-      },
-      shooting: {
-        shootingAverage: number,
-        positioning: number,
-        finishing: number,
-        shotPower: number,
-        longShots: number,
-        volleys: number,
-        penalties: number,
-        headingAccuracy: number,
-      },
-      passing: {
-        vision: number,
-        crossing: number,
-        freeKick: number,
-        shortPassing: number,
-        longPassing: number,
-        curve: number,
-      },
-      dribbling: {
-        agility: number,
-        balance: number,
-        reactions: number,
-        ballControl: number,
-        dribbling: number,
-        composure: number,
-      },
-      defending: {
-        interceptions: number,
-        heading: number,
-        marking: number,
-        standingTackle: number,
-        slidingTackle: number,
-      },
-      physical: {
-        jumping: number,
-        stamina: number,
-        strength: number,
-        aggression: number,
-      },
-}
+type PlayerModel = {
+    label: string,
+    data: string,
+    pace: number
+    shooting: number
+    passing: number
+    dribbling: number
+    defending: number
+    physical: number
+    average: number
+  }
 
 @Component({
   selector: 'app-root',
@@ -58,19 +21,34 @@ type FormModel = {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit {
-  pace: {paceAverage: number, acceleration: number, sprintSpeed: number} = {paceAverage: 100, acceleration: 100, sprintSpeed: 100};  
-  shooting: {shootingAverage: number, positioning: number, finishing: number, shotPower: number, longShots: number, volleys: number, penalties: number, headingAccuracy: number} = {shootingAverage: 100, positioning: 100, finishing: 100, shotPower: 100, longShots: 100, volleys: 100, penalties: 100, headingAccuracy: 100};
+  pace: number = 0;
+  shooting: number = 0;
+  passing: number = 0;
+  dribbling: number = 0;
+  defending: number = 0;
+  physical: number = 0;
+  average: number = 0;
+
+  players: {
+    label: string,
+    data: string,
+    pace: number
+    shooting: number
+    passing: number
+    dribbling: number
+    defending: number
+    physical: number
+    average: number
+  }[] = [];
 
   newPlayerForm: FormGroup;
 
-
-  playerPool: TreeNode[] = [];
-  firstTeam: TreeNode[] = [];
-  secondTeam: TreeNode[] = [];
-  reserveTeam: TreeNode[] = [];
+  playerPool = []
+  firstTeam: any[] = [];
+  secondTeam: any[] = [];
+  reserveTeam: any[] = [];
 
   constructor(private primengConfig: PrimeNGConfig, private formBuilder: FormBuilder) {
-    
     this.playerPool = [
       {
         label: 'Lista de jugadores',
@@ -78,208 +56,280 @@ export class AppComponent  implements OnInit {
         expandedIcon: 'pi pi-folder-open',
         collapsedIcon: 'pi pi-folder',
         children: [
-          {
-            label: 'Arqueros',
-            data: 'Arqueros',
-            expandedIcon: 'pi pi-folder-open',
-            collapsedIcon: 'pi pi-folder',
-            children: [
-              
-            ]
-          },
-          {
-            label: 'Defensores',
-            data: 'Defensores',
-            expandedIcon: 'pi pi-folder-open',
-            collapsedIcon: 'pi pi-folder',
-            children: [
-              {
-                label: 'Defensor 1',
-                data: 'Defensor 1',
-                expandedIcon: 'pi pi-user',
-                collapsedIcon: 'pi pi-user'
-              },
-            ]
-          },
-          {
-            label: 'Centro campistas',
-            data: 'Centro campistas',
-            expandedIcon: 'pi pi-folder-open',
-            collapsedIcon: 'pi pi-folder',
-            children: [
-              {
-                label: 'Centro campista 1',
-                data: 'Centro campista 1',
-                expandedIcon: 'pi pi-user',
-                collapsedIcon: 'pi pi-user'
-              }
-            ],
-          },
-          {
-            label: 'Delanteros',
-            data: 'Delanteros',
-            expandedIcon: 'pi pi-folder-open',
-            collapsedIcon: 'pi pi-folder',
-            children: [
-              {
-                label: 'Delantero 1',
-                data: 'Delantero 1',
-                expandedIcon: 'pi pi-user',
-                collapsedIcon: 'pi pi-user'
-              }
-            ],
-          },
-        ]
-      },
-    ];
+        //   {
+        //   label: '1',
+        //   data: '1',
+        //   pace: 1,
+        //   shooting: 1,
+        //   passing: 1,
+        //   dribbling: 1,
+        //   defending: 1,
+        //   physical: 1,
+        //   average: 1,
+        // },{
+        //   label: '2',
+        //   data: '2',
+        //   pace: 2,
+        //   shooting: 2,
+        //   passing: 2,
+        //   dribbling: 2,
+        //   defending: 2,
+        //   physical: 2,
+        //   average: 2,
+        // },{
+        //   label: '3',
+        //   data: '3',
+        //   pace: 3,
+        //   shooting: 3,
+        //   passing: 3,
+        //   dribbling: 3,
+        //   defending: 3,
+        //   physical: 3,
+        //   average: 3,
+        // },{
+        //   label: '4',
+        //   data: '4',
+        //   pace: 4,
+        //   shooting: 4,
+        //   passing: 4,
+        //   dribbling: 4,
+        //   defending: 4,
+        //   physical: 4,
+        //   average: 4,
+        // },{
+        //   label: '5',
+        //   data: '5',
+        //   pace: 5,
+        //   shooting: 5,
+        //   passing: 5,
+        //   dribbling: 5,
+        //   defending: 5,
+        //   physical: 5,
+        //   average: 5,
+        // },{
+        //   label: '6',
+        //   data: '6',
+        //   pace: 6,
+        //   shooting: 6,
+        //   passing: 6,
+        //   dribbling: 6,
+        //   defending: 6,
+        //   physical: 6,
+        //   average: 6,
+        // },{
+        //   label: '7',
+        //   data: '7',
+        //   pace: 7,
+        //   shooting: 7,
+        //   passing: 7,
+        //   dribbling: 7,
+        //   defending: 7,
+        //   physical: 7,
+        //   average: 7,
+        // },{
+        //   label: '8',
+        //   data: '8',
+        //   pace: 8,
+        //   shooting: 8,
+        //   passing: 8,
+        //   dribbling: 8,
+        //   defending: 8,
+        //   physical: 8,
+        //   average: 8,
+        // },{
+        //   label: '9',
+        //   data: '9',
+        //   pace: 9,
+        //   shooting: 9,
+        //   passing: 9,
+        //   dribbling: 9,
+        //   defending: 9,
+        //   physical: 9,
+        //   average: 9,
+        // },{
+        //   label: '10',
+        //   data: '10',
+        //   pace: 10,
+        //   shooting: 10,
+        //   passing: 10,
+        //   dribbling: 10,
+        //   defending: 10,
+        //   physical: 10,
+        //   average: 10,
+        // }
+      ]
+    }];
 
     this.createForm();
   }
 
   get paceForm(){
-    return this.newPlayerForm.get('pace') as FormGroup;
+    return this.newPlayerForm.get('pace') as FormControl;
   }
-  get paceAverageControl(){
-    return this.paceForm.get('paceAverage') as FormControl;
+  get shootingForm(){
+    return this.newPlayerForm.get('shooting') as FormControl;
   }
-  get accelerationControl(){
-    return this.paceForm.get('acceleration') as FormControl;
+  get passingForm(){
+    return this.newPlayerForm.get('passing') as FormControl;
   }
-  get sprintSpeedControl(){
-    return this.paceForm.get('sprintSpeed') as FormControl;
+  get dribblingForm(){
+    return this.newPlayerForm.get('dribbling') as FormControl;
+  }
+  get defendingForm(){
+    return this.newPlayerForm.get('defending') as FormControl;
+  }
+  get physicalForm(){
+    return this.newPlayerForm.get('physical') as FormControl;
+  }
+  get averageForm(){
+    return this.newPlayerForm.get('average') as FormControl;
   }
 
-  get shootingForm(){
-    return this.newPlayerForm.get('shooting') as FormGroup;
+  get firstTeamAverage(){
+    let average = 0;
+    this.firstTeam.forEach(player => {
+      average += player.average;
+    });
+
+    average = average / this.firstTeam.length;
+    
+    return average.toFixed(0);
   }
-  get shootingAverageControl(){
-    return this.shootingForm.get('shootingAverage') as FormControl;
+
+  get secondTeamAverage(){
+    let average = 0;
+    this.secondTeam.forEach(player => {
+      average += player.average;
+    });
+
+    average = average / this.secondTeam.length;
+
+    return average.toFixed(0);
   }
-  get positioningControl(){
-    return this.shootingForm.get('positioning') as FormControl;
-  }
-  get finishingControl(){
-    return this.shootingForm.get('finishing') as FormControl;
-  }
-  get shotPowerControl(){
-    return this.shootingForm.get('shotPower') as FormControl;
-  }
-  get longShotsControl(){
-    return this.shootingForm.get('longShots') as FormControl;
-  }
-  get volleysControl(){
-    return this.shootingForm.get('volleys') as FormControl;
-  }
-  get penaltiesControl(){ 
-    return this.shootingForm.get('penalties') as FormControl;
-  }
-  get headingAccuracyControl(){
-    return this.shootingForm.get('headingAccuracy') as FormControl;
-  }
+
 
   ngOnInit() {
       this.primengConfig.ripple = true;
-      console.log(this.accelerationControl.value)
   }
 
   onSubmit(){
+    console.log(this.newPlayerForm.value)
+    this.playerPool[0].children.push({
+      label: this.newPlayerForm.value.label,
+      data: this.newPlayerForm.value.data,
+      pace: this.newPlayerForm.value.pace,
+      shooting: this.newPlayerForm.value.shooting,
+      passing: this.newPlayerForm.value.passing,
+      dribbling: this.newPlayerForm.value.dribbling,
+      defending: this.newPlayerForm.value.defending,
+      physical: this.newPlayerForm.value.physical,
+      average: this.newPlayerForm.value.average,
+    });
+  }
+  
+  //algorithm that can balance two teams with the averages of each player
+  balanceTeams(){
+    let firstTeam = [];
+    let secondTeam = [];
+    let players: any[] = this.playerPool[0].children;
 
+     players.sort((a, b) => {
+      return a.average - b.average;
+    });
+
+    players.forEach(player => {
+     player.label = player.label + ` (${player.average})`;
+    });
+
+    for (let index = 0; index <= 5; index++) {
+      if(players.length > 2){
+        if (index % 2 == 0) {
+          firstTeam.push(players[0]);
+          firstTeam.push(players[players.length - 1]);
+          players.shift();
+          players.pop();
+
+        } else {
+          secondTeam.push(players[0]);
+          secondTeam.push(players[players.length - 1]);
+
+          players.shift();
+          players.pop();
+        }      
+      } else {
+        if (index % 2 == 0) {
+          firstTeam.push(players[0]);
+          players.shift();
+        } else {
+          secondTeam.push(players[0]);
+          players.shift();
+        }
+      }
+    }
+
+    this.firstTeam = firstTeam;
+    this.secondTeam = secondTeam;
+
+   
+  }
+
+  calculateAverageTeam(team){
+    let average = 0;
+    for(let i = 0; i < team.length; i++){
+      average += team[i].average;
+    }
+    return average;
+  }
+
+  calculateAverageDifference(average){
+    let difference = 0;
+    difference = average - this.average;
+    return difference;
   }
 
   createForm(){
     this.newPlayerForm = this.formBuilder.group({
-      label: [''],
-      data: [''],
-      pace: this.formBuilder.group({
-        paceAverage: [''],
-        acceleration: [100],
-        sprintSpeed: [''],
-      }),
-      shooting: this.formBuilder.group({
-        shootingAverage: [''],
-        positioning: [''],
-        finishing: [''],
-        shotPower: [''],
-        longShots: [''],
-        volleys: [''],
-        penalties: [''],
-        headingAccuracy: [''],
-      }),
-      passing: this.formBuilder.group({
-        vision: [''],
-        crossing: [''],
-        freeKick: [''],
-        shortPassing: [''],
-        longPassing: [''],
-        curve: [''],
-      }),
-      dribbling: this.formBuilder.group({
-        agility: [''],
-        balance: [''],
-        reactions: [''],
-        ballControl: [''],
-        dribbling: [''],
-        composure: [''],
-      }),
-      defending: this.formBuilder.group({
-        interceptions: [''],
-        heading: [''],
-        marking: [''],
-        standingTackle: [''],
-        slidingTackle: [''],
-      }),
-      physical: this.formBuilder.group({
-        jumping: [''],
-        stamina: [''],
-        strength: [''],
-        aggression: [''],
-      }),
+      label: ['', Validators.required],
+      data: ['', Validators.required],
+      pace: [''],
+      shooting: [''],
+      passing: [''],
+      dribbling: [''],
+      defending: [''],
+      physical: [''],
+      average: ['']
     });
 
-    this.accelerationControl.valueChanges.subscribe(value => {
-      const paceAverage = (value + this.sprintSpeedControl.value) / 2 ;
-      this.paceAverageControl.setValue(paceAverage.toFixed(0));
-    });
-
-    this.sprintSpeedControl.valueChanges.subscribe(value => {
-      const paceAverage = (value + this.accelerationControl.value) / 2 ;
-      this.paceAverageControl.setValue(paceAverage);
-    });
-
-    this.positioningControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.shotPowerControl.value + this.longShotsControl.value + this.volleysControl.value + this.penaltiesControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    });
-
-    this.finishingControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.positioningControl.value + this.shotPowerControl.value + this.longShotsControl.value + this.volleysControl.value + this.penaltiesControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
+    this.paceForm.valueChanges.subscribe((value) => {
+      this.pace = value;
+      this.averageForm.setValue(this.calculateAverage());
+    })
+    this.shootingForm.valueChanges.subscribe((value) => {
+      this.shooting = value;
+      this.averageForm.setValue(this.calculateAverage());
+    })
+    this.passingForm.valueChanges.subscribe((value) => {
+      this.passing = value;
+      this.averageForm.setValue(this.calculateAverage());
+    })
+    this.dribblingForm.valueChanges.subscribe((value) => {
+      this.dribbling = value;
+      this.averageForm.setValue(this.calculateAverage());
+    })
+    this.defendingForm.valueChanges.subscribe((value) => {
+      this.defending = value;
+      this.averageForm.setValue(this.calculateAverage());
+    })
+    this.physicalForm.valueChanges.subscribe((value) => {
+      this.physical = value;
+      this.averageForm.setValue(this.calculateAverage());
     })
 
-    this.shotPowerControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.positioningControl.value + this.longShotsControl.value + this.volleysControl.value + this.penaltiesControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    })
+    
+  }
 
-    this.longShotsControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.shotPowerControl.value + this.positioningControl.value + this.volleysControl.value + this.penaltiesControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    })
-
-    this.volleysControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.shotPowerControl.value + this.longShotsControl.value + this.positioningControl.value + this.penaltiesControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    })
-
-    this.penaltiesControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.shotPowerControl.value + this.longShotsControl.value + this.volleysControl.value + this.positioningControl.value + this.headingAccuracyControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    })
-
-    this.headingAccuracyControl.valueChanges.subscribe(value => {
-      const shootingAverage = (value + this.finishingControl.value + this.shotPowerControl.value + this.longShotsControl.value + this.volleysControl.value + this.penaltiesControl.value + this.positioningControl.value) / 7 ;
-      this.shootingAverageControl.setValue(shootingAverage.toFixed(0));
-    })
+  calculateAverage(){
+    return Math.round(((this.pace + this.shooting + this.passing + this.dribbling + this.defending + this.physical) / 6));
   }
 }
 
