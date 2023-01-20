@@ -18,7 +18,7 @@ jobs:
       - name: Build Frontend
         working-directory: .
         run: |
-          npm ci 
+          npm install
           npm run build
       
       - name: Log in to Docker Hub
