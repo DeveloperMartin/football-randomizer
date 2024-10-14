@@ -14,6 +14,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {KnobModule} from 'primeng/knob';
 import {OrganizationChartModule} from 'primeng/organizationchart';
+import {FileUploadModule} from 'primeng/fileupload';
+import {HttpClientModule} from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent
@@ -31,7 +33,9 @@ import {OrganizationChartModule} from 'primeng/organizationchart';
     InputTextareaModule,
     InputNumberModule,
     KnobModule,
-    OrganizationChartModule
+    OrganizationChartModule,
+    FileUploadModule,
+    HttpClientModule
     
   ],
   providers: [],

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validator, Validators } from '@angular/forms';
 import { MessageService, PrimeNGConfig, TreeDragDropService, TreeNode } from 'primeng/api';
+import { XlsxService } from './services/xlsx.service';
 
 type PlayerModel = {
     label: string,
@@ -21,6 +22,7 @@ type PlayerModel = {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent  implements OnInit {
+
   pace: number = 0;
   shooting: number = 0;
   passing: number = 0;
@@ -43,13 +45,16 @@ export class AppComponent  implements OnInit {
 
   newPlayerForm: FormGroup;
 
+  uploadedPlayers: any[] = [];
+
   playerPool = []
+  reservePool = []
   firstTeam: any[] = [];
   secondTeam: any[] = [];
   reserveTeam: any[] = [];
 
-  constructor(private primengConfig: PrimeNGConfig, private formBuilder: FormBuilder) {
-    this.playerPool = [
+  constructor(private primengConfig: PrimeNGConfig, private formBuilder: FormBuilder, private xlsxService: XlsxService, private messageService: MessageService) {
+    this.reservePool = [
       {
         label: 'Lista de jugadores',
         data: 'Todos los jugadores',
@@ -214,7 +219,7 @@ export class AppComponent  implements OnInit {
 
   onSubmit(){
     console.log(this.newPlayerForm.value)
-    this.playerPool[0].children.push({
+    this.addPlayer({
       label: this.newPlayerForm.value.label,
       data: this.newPlayerForm.value.data,
       pace: this.newPlayerForm.value.pace,
@@ -226,12 +231,38 @@ export class AppComponent  implements OnInit {
       average: this.newPlayerForm.value.average,
     });
   }
+
+  addPlayer(newPlayer){
+    this.reservePool[0].children.push(newPlayer);
+  }
+  
+  addFile(event) {
+    console.log(event)
+    this.xlsxService.importExcel(event).then((data) => {
+      data.forEach((player: any) => {
+        const wrapPlayer = {
+          label: player.Jugador,
+          data: player.Descripcion,
+          pace: player.Ritmo,
+          shooting: player.Tiro,
+          passing: player.Pase,
+          dribbling: player.Regate,
+          defending: player.Defensa,
+          physical: player.Fisico,
+          average: Math.round((player.Ritmo + player.Tiro + player.Pase + player.Regate + player.Defensa + player.Fisico) / 6),
+        };
+        console.log(wrapPlayer)
+        this.reservePool[0].children.push(wrapPlayer);
+      });
+    });
+  }
   
   //algorithm that can balance two teams with the averages of each player
   balanceTeams(){
+    console.log(this.playerPool)
     let firstTeam = [];
     let secondTeam = [];
-    let players: any[] = this.playerPool[0].children;
+    let players: any[] = this.playerPool;
 
      players.sort((a, b) => {
       return a.average - b.average;
@@ -330,6 +361,10 @@ export class AppComponent  implements OnInit {
 
   calculateAverage(){
     return Math.round(((this.pace + this.shooting + this.passing + this.dribbling + this.defending + this.physical) / 6));
+  }
+
+  calculatePlayerAverage(player){
+    return Math.round(((player.pace + player.shooting + player.passing + player.dribbling + player.defending + player.physical) / 6));
   }
 }
 

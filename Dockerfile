@@ -4,4 +4,4 @@ WORKDIR /app
 COPY ./dist/football-randomizer /app/dist/football-randomizer
 
 FROM nginx as runtime
-COPY --from=build /app/dist/frontend /usr/share/nginx/html
+COPY --from=build /app/dist/football-randomizer /usr/share/nginx/html

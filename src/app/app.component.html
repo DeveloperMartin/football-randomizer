@@ -63,17 +63,56 @@
     ></button>
   </form>
 </p-card>
+<div class="grid">
+  <div class="col">
+    <p-card header="Lista de jugadores en la reserva" class="p-1">
+      <div class="col-12 py-4 p-field">
+        <div class="form-group row">
+          <div class="custom-file">
+            <label class="clickeable" for="upload-photo"
+              >Importar lista de jugadores</label
+            >
+            <input
+              type="file"
+              name="photo"
+              id="upload-photo"
+              (change)="addFile($event)"
+            />
+          </div>
+        </div>
+      </div>
 
-<p-card header="Lista de jugadores" class="p-1">
-  <p-tree
-    class="m-1"
-    [value]="playerPool"
-    [draggableNodes]="true"
-    [droppableNodes]="true"
-    draggableScope="self"
-    droppableScope="self"
-  ></p-tree>
-</p-card>
+      <p-tree
+        class="m-1"
+        [value]="reservePool"
+        [draggableNodes]="true"
+        [droppableNodes]="true"
+        draggableScope="a"
+        droppableScope="self"
+      ></p-tree>
+    </p-card>
+  </div>
+  <div class="col">
+    <p-card header="Lista de jugadores para los equipos (MIN 10)" class="p-1">
+      <div class="col-12 py-4 p-field">
+        <div class="form-group row">
+          <div class="custom-file">
+            <label>Importar lista de jugadores</label>
+          </div>
+        </div>
+      </div>
+      <p-tree
+        class="m-1"
+        [value]="playerPool"
+        [draggableNodes]="false"
+        [droppableNodes]="true"
+        draggableScope="self"
+        droppableScope="a"
+      ></p-tree>
+    </p-card>
+  </div>
+</div>
+
 <div class="grid">
   <div class="col-4">
     <p-card [header]="'Equipo 1 GBL:' + (firstTeam ? firstTeamAverage : 0)">
